@@ -14,18 +14,18 @@ class AsYouTypeFormatter extends TextInputFormatter {
   final RegExp allowedChars = RegExp(r'[\d+]');
 
   /// The [isoCode] of the [Country] formatting the phone number to
-  final String isoCode;
+  final String? isoCode;
 
   /// The [dialCode] of the [Country] formatting the phone number to
-  final String dialCode;
+  final String? dialCode;
 
   /// [onInputFormatted] is a callback that passes the formatted phone number
   final OnInputFormatted<TextEditingValue> onInputFormatted;
 
   AsYouTypeFormatter(
-      {@required this.isoCode,
-      @required this.dialCode,
-      @required this.onInputFormatted})
+      {required this.isoCode,
+      required this.dialCode,
+      required this.onInputFormatted})
       : assert(isoCode != null),
         assert(dialCode != null);
 
@@ -38,7 +38,7 @@ class AsYouTypeFormatter extends TextInputFormatter {
     if (newValueLength > 0 && newValueLength > oldValueLength) {
       String newValueText = newValue.text;
       String rawText = newValueText.replaceAll(separatorChars, '');
-      String textToParse = dialCode + rawText;
+      String textToParse = dialCode! + rawText;
 
       final _ = newValueText
           .substring(
@@ -47,7 +47,7 @@ class AsYouTypeFormatter extends TextInputFormatter {
           .replaceAll(separatorChars, '');
 
       formatAsYouType(input: textToParse).then(
-        (String value) {
+        (String? value) {
           String parsedText = parsePhoneNumber(value);
 
           int offset =
@@ -98,9 +98,9 @@ class AsYouTypeFormatter extends TextInputFormatter {
 
   /// Accepts [input], unformatted phone number and
   /// returns a [Future<String>] of the formatted phone number.
-  Future<String> formatAsYouType({@required String input}) async {
+  Future<String?> formatAsYouType({required String input}) async {
     try {
-      String formattedPhoneNumber = await PhoneNumberUtil.formatAsYouType(
+      String? formattedPhoneNumber = await PhoneNumberUtil.formatAsYouType(
           phoneNumber: input, isoCode: isoCode);
       return formattedPhoneNumber;
     } on Exception {
@@ -110,21 +110,21 @@ class AsYouTypeFormatter extends TextInputFormatter {
 
   /// Accepts a formatted [phoneNumber]
   /// returns a [String] of `phoneNumber` with the dialCode replaced with an empty String
-  String parsePhoneNumber(String phoneNumber) {
-    if (dialCode.length > 4) {
-      if (isPartOfNorthAmericanNumberingPlan(dialCode)) {
+  String parsePhoneNumber(String? phoneNumber) {
+    if (dialCode!.length > 4) {
+      if (isPartOfNorthAmericanNumberingPlan(dialCode!)) {
         String northAmericaDialCode = '+1';
         String countryDialCodeWithSpace = northAmericaDialCode +
             ' ' +
-            dialCode.replaceFirst(northAmericaDialCode, '');
+            dialCode!.replaceFirst(northAmericaDialCode, '');
 
-        return phoneNumber
+        return phoneNumber!
             .replaceFirst(countryDialCodeWithSpace, '')
             .replaceFirst(separatorChars, '')
             .trim();
       }
     }
-    return phoneNumber.replaceFirst(dialCode, '').trim();
+    return phoneNumber!.replaceFirst(dialCode!, '').trim();
   }
 
   /// Accepts a [dialCode]
