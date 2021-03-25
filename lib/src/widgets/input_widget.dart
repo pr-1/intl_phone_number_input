@@ -159,7 +159,7 @@ class _InputWidgetState extends State<InternationalPhoneNumberInput> {
 
   @override
   void didUpdateWidget(InternationalPhoneNumberInput oldWidget) {
-    if (oldWidget?.initialValue?.hash != widget?.initialValue?.hash) {
+    if (oldWidget.initialValue?.hash != widget.initialValue?.hash) {
       loadCountries();
       initialiseWidget();
     } else {
@@ -175,7 +175,7 @@ class _InputWidgetState extends State<InternationalPhoneNumberInput> {
           widget.initialValue!.phoneNumber!.isNotEmpty &&
           await (PhoneNumberUtil.isValidNumber(
               phoneNumber: widget.initialValue!.phoneNumber,
-              isoCode: widget.initialValue!.isoCode) as FutureOr<bool>)) {
+              isoCode: widget.initialValue!.isoCode)) !=null) {
         controller!.text =
             await PhoneNumber.getParsableNumber(widget.initialValue!);
 
@@ -191,7 +191,7 @@ class _InputWidgetState extends State<InternationalPhoneNumberInput> {
           CountryProvider.getCountriesData(countries: widget.countries);
 
       final CountryComparator? countryComparator =
-          widget.selectorConfig?.countryComparator;
+          widget.selectorConfig.countryComparator;
       if (countryComparator != null) {
         countries.sort(countryComparator);
       }
@@ -222,24 +222,20 @@ class _InputWidgetState extends State<InternationalPhoneNumberInput> {
           String phoneNumber =
               '${this.country?.dialCode}$parsedPhoneNumberString';
 
-          if (widget.onInputChanged != null) {
-            widget.onInputChanged(PhoneNumber(
-                phoneNumber: phoneNumber,
-                isoCode: this.country?.alpha2Code,
-                dialCode: this.country?.dialCode));
-          }
+          widget.onInputChanged(PhoneNumber(
+              phoneNumber: phoneNumber,
+              isoCode: this.country?.alpha2Code,
+              dialCode: this.country?.dialCode));
 
           if (widget.onInputValidated != null) {
             widget.onInputValidated!(false);
           }
           this.isNotValid = true;
         } else {
-          if (widget.onInputChanged != null) {
-            widget.onInputChanged(PhoneNumber(
-                phoneNumber: phoneNumber,
-                isoCode: this.country?.alpha2Code,
-                dialCode: this.country?.dialCode));
-          }
+          widget.onInputChanged(PhoneNumber(
+              phoneNumber: phoneNumber,
+              isoCode: this.country?.alpha2Code,
+              dialCode: this.country?.dialCode));
 
           if (widget.onInputValidated != null) {
             widget.onInputValidated!(true);
@@ -256,8 +252,8 @@ class _InputWidgetState extends State<InternationalPhoneNumberInput> {
       String phoneNumber, String? isoCode) async {
     if (phoneNumber.isNotEmpty && isoCode != null) {
       try {
-        bool isValidPhoneNumber = await (PhoneNumberUtil.isValidNumber(
-            phoneNumber: phoneNumber, isoCode: isoCode) as FutureOr<bool>);
+        bool isValidPhoneNumber = (await (PhoneNumberUtil.isValidNumber(
+            phoneNumber: phoneNumber, isoCode: isoCode)))!;
 
         if (isValidPhoneNumber) {
           return await PhoneNumberUtil.normalizePhoneNumber(
@@ -309,10 +305,10 @@ class _InputWidgetState extends State<InternationalPhoneNumberInput> {
     bool isValid =
         this.isNotValid && (value!.isNotEmpty || widget.ignoreBlank == false);
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-      if (isValid && widget.errorMessage != null) {
+      if (isValid) {
         setState(() {
           this.selectorButtonBottomPadding =
-              widget.selectorButtonOnErrorPadding ?? 24;
+              widget.selectorButtonOnErrorPadding;
         });
       } else {
         setState(() {
@@ -375,8 +371,8 @@ class _InputWidgetView
 
   @override
   Widget build(BuildContext context) {
-    final countryCode = state?.country?.alpha2Code ?? '';
-    final dialCode = state?.country?.dialCode ?? '';
+    final countryCode = state.country?.alpha2Code ?? '';
+    final dialCode = state.country?.dialCode ?? '';
 
     return Container(
       child: Row(
