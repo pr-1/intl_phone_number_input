@@ -1,4 +1,3 @@
-import 'package:flutter/widgets.dart';
 import 'package:intl_phone_number_input/src/models/country_list.dart';
 import 'package:intl_phone_number_input/src/models/country_model.dart';
 

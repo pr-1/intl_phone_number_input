@@ -1,4 +1,3 @@
-import 'package:meta/meta.dart';
 
 /// A [Country] model represents an instance of a country which contains
 /// information about the country

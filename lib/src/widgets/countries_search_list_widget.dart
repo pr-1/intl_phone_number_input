@@ -37,7 +37,7 @@ class _CountrySearchListWidgetState extends State<CountrySearchListWidget> {
 
   @override
   void dispose() {
-    _searchController?.dispose();
+    _searchController.dispose();
     super.dispose();
   }
 
@@ -104,8 +104,8 @@ class _CountrySearchListWidgetState extends State<CountrySearchListWidget> {
             shrinkWrap: true,
             itemCount: filteredCountries.length,
             itemBuilder: (BuildContext context, int index) {
-              Country country = filteredCountries[index];
-              if (country == null) return Container();
+              Country? country = filteredCountries[index];
+
               return ListTile(
                 key: Key(TestHelper.countryItemKeyValue(country.alpha2Code)),
                 leading: widget.showFlags!
@@ -117,7 +117,7 @@ class _CountrySearchListWidgetState extends State<CountrySearchListWidget> {
                         textAlign: TextAlign.start)),
                 subtitle: Align(
                     alignment: AlignmentDirectional.centerStart,
-                    child: Text('${country?.dialCode ?? ''}',
+                    child: Text('${country.dialCode ?? ''}',
                         textDirection: TextDirection.ltr,
                         textAlign: TextAlign.start)),
                 onTap: () => Navigator.of(context).pop(country),

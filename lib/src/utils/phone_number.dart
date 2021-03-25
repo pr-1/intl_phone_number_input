@@ -79,7 +79,6 @@ class PhoneNumber extends Equatable {
 
   /// Accepts a [PhoneNumber] object and returns a formatted phone number String
   static Future<String> getParsableNumber(PhoneNumber phoneNumber) async {
-    assert(phoneNumber != null);
     if (phoneNumber.isoCode != null) {
       PhoneNumber number = await getRegionInfoFromPhoneNumber(
         phoneNumber.phoneNumber,
@@ -107,7 +106,7 @@ class PhoneNumber extends Equatable {
   /// For predefined phone number returns Country's [isoCode] from the dial code,
   /// Returns null if not found.
   static String? getISO2CodeByPrefix(String prefix) {
-    if (prefix != null && prefix.isNotEmpty) {
+    if (prefix.isNotEmpty) {
       prefix = prefix.startsWith('+') ? prefix : '+$prefix';
       var country = Countries.countryList.firstWhereOrNull(
           (country) => country['dial_code'] == prefix);

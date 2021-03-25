@@ -20,7 +20,6 @@ class PhoneNumberTest {
     String? phoneNumber, [
     String isoCode = '',
   ]) async {
-    assert(isoCode != null);
     RegionInfo regionInfo = await PhoneNumberUtil.getRegionInfo(
         phoneNumber: phoneNumber, isoCode: isoCode);
 
@@ -37,7 +36,6 @@ class PhoneNumberTest {
   }
 
   static Future<String> getParsableNumber(PhoneNumberTest phoneNumber) async {
-    assert(phoneNumber != null);
     if (phoneNumber.isoCode != null) {
       PhoneNumberTest number = await getRegionInfoFromPhoneNumber(
         phoneNumber.phoneNumber,
@@ -64,7 +62,7 @@ class PhoneNumberTest {
   }
 
   static String? getISO2CodeByPrefix(String prefix) {
-    if (prefix != null && prefix.isNotEmpty) {
+    if (prefix.isNotEmpty) {
       prefix = prefix.startsWith('+') ? prefix : '+$prefix';
       var country = Countries.countryList.firstWhereOrNull(
           (country) => country['dial_code'] == prefix);
